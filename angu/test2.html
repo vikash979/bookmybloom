@@ -1,0 +1,97 @@
+<html ng-app="myApp" >
+<head>
+  <meta charset="utf-8">
+  <title>AngularJS Plunker</title>
+  <script>document.write('<base href="' + document.location + '" />');</script>
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="http://code.angularjs.org/1.2.13/angular.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+ 
+  <script src="app.js"></script>
+  <script src="loginController.js"></script>
+  <script src="homeController.js"></script>
+  <script src="loginService.js"></script>
+</head>
+<body>
+  <div class="container" width="100px">
+      <h2>AngularJS Simple Login Example</h2>
+      
+      <div ui-view></div>
+  </div>
+<script>
+//app.js
+(function() {
+var app = angular.module('myApp', ['ui.router']);
+app.run(function($rootScope, $location, $state, LoginService) {
+console.clear();
+console.log('running');
+if(!LoginService.isAuthenticated()) {
+$state.transitionTo('login');
+}
+});
+app.config(['$stateProvider', '$urlRouterProvider', 
+function($stateProvider, $urlRouterProvider) {
+$stateProvider
+.state('login', {
+url : '/login',
+templateUrl : 'login.html',
+controller : 'LoginController'
+})
+.state('home', {
+url : '/home',
+templateUrl : 'home.html',
+controller : 'HomeController'
+});
+$urlRouterProvider.otherwise('/login');
+}]);
+})();
+
+
+
+//loginController-js 
+var app = angular.module('myApp');
+app.controller('LoginController', function($scope, $rootScope, $stateParams, $state, LoginService) {
+$rootScope.title = "AngularJS Login Sample";
+$scope.formSubmit = function() {
+if(LoginService.login($scope.username, $scope.password)) {
+$rootScope.userName = $scope.username;
+$scope.error = '';
+$scope.username = '';
+$scope.password = '';
+$state.transitionTo('home');
+} else {
+$scope.error = "Incorrect username/password !";
+}   
+};    
+});
+
+
+
+//homeController.js
+var app = angular.module('myApp');
+app.controller('HomeController', 
+function($scope, $rootScope, $stateParams, $state, LoginService) {
+$scope.user = $rootScope.userName;
+});
+
+
+//loginService.js
+var app = angular.module('myApp');
+app.factory('LoginService', function() {
+var admin = 'admin';
+var pass = 'password';
+var isAuthenticated = false;
+return {
+login : function(username, password) {
+isAuthenticated = username === admin && password === pass;
+return isAuthenticated;
+},
+isAuthenticated : function() {
+return isAuthenticated;
+}
+};
+});
+</script>
+</body>
+</html>

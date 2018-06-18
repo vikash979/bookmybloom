@@ -1,0 +1,177 @@
+<html>
+<head>
+<title>
+
+</title>
+<script type="text/javascript" src="angul.js"></script>
+<script src="angular.min1.js"></script>
+
+</head>
+<body ng-app="myApp">
+
+<div ng-controller="myContrller">
+<ul ng-repeat="country in countries" ng-init="parentIndex = $index">
+<li>
+{{country.name}} == {{$index}}
+
+<ul ng-repeat="city in country.cities" >
+<li>
+{{city.name}}=== {{ parentIndex }} ==={{$index}}
+</li>
+</ul>
+</li>
+
+</ul>
+
+
+</div>
+<br/><br/>
+<div ng-controller="myCtrl">
+Order By: <select ng-model="sortColumn">
+<option value="name">Name ASC</option>
+<option value="gender">Gender ASC</option>
+<option value="dateOfBirth">Date of Birth ASC</option>
+<option value="-salary">Salary DESC</option>
+</select> &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" placeholder="Search employee"   ng-model="searchtext.name"> &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" placeholder="Search employee"  ng-model="searchtext.city">&nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" ng-model="exactMatche">
+<br/><br/>
+ &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" placeholder="Search employee"  ng-model="searchtextNew"><br/>
+<style>
+.arrow-up
+{
+width:0;
+height: 0;
+border-left: 5px solid transparent;
+border-right: 5px solid transparent;
+border-bottom: 10px solid red;
+display: inline-block;
+}
+.arrow-down
+{
+width:0;
+height: 0;
+border-left: 5px solid transparent;
+border-right: 5px solid transparent;
+border-top: 10px solid black;
+display: inline-block;
+}
+th
+{
+	border:1px solid black;
+	padding: 5px;
+	text-align: left;
+	cursor: pointer;
+}
+</style>
+<table border="1" width="80%">
+<thead>
+	<tr><th ng-click="sortData('name')">Name<div ng-class="getSortClass('name')"></div></th><th ng-click="sortData('dateOfBirth')">Date of Birth<div ng-class="getSortClass('dateOfBirth')"></div></th><th ng-click="sortData('gender')">Gender<div ng-class="getSortClass('gender')"></div></th><th ng-click="sortData('salary')">Salary<div ng-class="getSortClass('salary')"></div></th> <th ng-click="sortData('city')">City<div ng-class="getSortClass('city')"></div></th></tr>
+</thead>
+<tbody>
+	<tr ng-repeat="employee in records | orderBy:sortColumn:reverseSort | filter:searchtext:exactMatche  | filter:search "><td> {{ employee.name  }}</td>
+	<td> {{ employee.dateOfBirth | date:"dd/MM/yyyy"  }}</td>
+	<td> {{ employee.gender  }}</td>
+	<td> {{ employee.salary  }}</td>
+<td>  {{ employee.city  }}
+	</td></tr>
+</tbody>
+</table>
+
+</div>
+
+
+</body>
+<script type="text/javascript">
+	
+	var app = angular.module("myApp", []);
+	app.controller("myContrller", function($scope) {
+
+var countries=[
+{
+	name:"India",
+	cities:
+	[
+	{name:"Patna"},
+	{name:"Ranchi"},
+	{name:"kolkotta"},
+	]
+},
+
+{
+	name:"Pakistan",
+	cities:
+	[
+	{name:"Karanchi"},
+	{name:"Sindh;"},
+	{name:"Lahore"},
+	]
+},
+
+{
+	name:"USA",
+	cities:
+	[
+	{name:"New York"},
+	{name:"Washigaton"},
+	{name:"chicago"},
+	]
+},
+{
+	name:"England",
+	cities:
+	[
+	{name:"London"},
+	
+	]
+}
+
+]
+$scope.countries =countries;
+	});
+app.controller("myCtrl", function($scope) {
+  var records = [
+    {name:"Ben", dateOfBirth: new Date("November 23 1980") , gender: "Male", salary:"5555000", city:"Mumai"},
+    {name:"Meera", dateOfBirth: new Date("October 15 1985") , gender: "feMale", salary:"1000", city:"Delhi"},
+     {name:"vikash", dateOfBirth: new Date("March 20 1988") , gender: "Male", salary:"5000",city:"kolkotta"}
+    ];
+    $scope.records =records;
+    $scope.sortColumn ="name";
+    $scope.reverseSort= false;
+
+    $scope.sortData=function(column)
+    {
+
+    	$scope.reverseSort=($scope.sortColumn==column) ? !$scope.reverseSort: false;
+    	$scope.sortColumn=column;
+
+
+    }
+    $scope.getSortClass= function(column)
+    {
+    	if($scope.sortColumn==column)
+    	{
+    		return $scope.reverseSort  ? 'arrow-down' :'arrow-up'
+    	}
+
+    	return '';
+    }
+    $scope.search=function(item)
+    {
+if($scope.searchtextNew==undefined)
+{
+	return true;
+}
+else
+{
+
+	if(item.name.toLowerCase().indexOf($scope.searchtextNew.toLowerCase())!=1 || item.city.toLowerCase().indexOf($scope.searchtextNew.toLowerCase())!=1)
+	{
+		return true;
+	}
+}
+return false;
+
+    }
+
+});
+</script>
+</html>

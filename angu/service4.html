@@ -1,0 +1,57 @@
+<html>
+
+   <head>
+      <title>Angular JS Services</title>
+      <script src = "angular.min1.js"></script>
+   </head>
+   
+   <body>
+     <div ng-app="app">
+    <div ng-controller="CalculatorController">
+        Enter a number:
+        <input type="number" ng-model="number" />
+        <button ng-click="doSquare()">X<sup>2</sup></button>
+        <button ng-click="doCube()">X<sup>3</sup></button>
+        
+        <div>Answer: {{answer}}</div>
+    </div>
+</div>
+<input type="checkbox" ng-model="enableDisableButton">Disable Button
+<button ng-disabled="enableDisableButton">Click Me!</button>
+<script type="text/javascript">
+	
+	var app = angular.module('app', []);
+
+app.service('MathService', function() {
+    /*this.add = function(a, b) { return a + b };
+    
+    this.subtract = function(a, b) { return a - b };
+    
+    this.multiply = function(a, b) { return a * b };
+    
+    this.divide = function(a, b) { return a / b };*/
+    this.myFun =function ()
+    {return "vikash"}
+});
+
+app.service('CalculatorService', function(MathService){
+    
+    this.square = function(a) { return MathService.add(a,a); };
+    this.cube = function(a) { return MathService.multiply(a, MathService.multiply(a,a)); };
+
+});
+
+app.controller('CalculatorController', function($scope, MathService) {
+
+    $scope.doSquare = function() {
+        $scope.answer = MathService.myFun($scope.number);
+    }
+
+    $scope.doCube = function() {
+        $scope.answer = CalculatorService.cube($scope.number);
+    }
+});
+</script>
+      
+   </body>
+</html>

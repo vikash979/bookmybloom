@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<!-- define angular app -->
+<html ng-app="scotchApp">
+
+<head>
+  <!-- SCROLLS -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png" />
+	
+
+	<!--     Fonts and icons     -->
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+
+	<!-- CSS Files -->
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="assets/css/material-bootstrap-wizard.css" rel="stylesheet" />
+
+	<!-- CSS Just for demo purpose, don't include it in your project -->
+	<link href="assets/css/demo.css" rel="stylesheet" />
+  <!-- SPELLS -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+  <script src="script.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.11/angular.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.min.js"></script>
+</head>
+
+<!-- define angular controller -->
+<body ng-controller="mainController" >
+
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">Angular Routing Example</a>
+      </div>
+
+      <ul class="nav navbar-nav navbar-right">
+<li><a href="#/route1">Route 1</a></li>
+        <li><a href="#/route2">Route 2</a></li>
+        <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
+        <li><a href="#about"><i class="fa fa-shield"></i> About</a></li>
+        <li><a href="#contact"><i class="fa fa-comment"></i> Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="main">
+  
+    <!-- angular templating -->
+		<!-- this is where content will be injected -->
+		<div class="well" ng-hide="stateLoading" ui-view></div>        
+      <div class="spinner" ng-show="stateLoading">State View Loading...</div>
+    
+    
+  </div>
+  
+  <footer class="text-center">
+    <p>View the tutorial on <a href="http://scotch.io/tutorials/javascript/single-page-apps-with-angularjs-routing-and-templating">Scotch.io</a></p>
+  
+    <p>View a tutorial on <a href="http://scotch.io/tutorials/javascript/animating-angularjs-apps-ngview">Animating Your Angular Single Page App</a></p>
+  </footer>
+<script>
+	// create the module and name it scotchApp
+	var scotchApp = angular.module('scotchApp', ["ui.router"]);
+
+	// configure our routes
+	scotchApp.config(function($stateProvider, $urlRouterProvider){
+      
+      // For any unmatched url, send to /route1
+      $urlRouterProvider.otherwise("/route1")
+      
+      $stateProvider
+        .state('route1', {
+            url: "/route1",
+            templateUrl: "one.php",
+            resolve: {
+              delay: function($timeout) {
+                return $timeout(function(){}, 1000);
+              }
+            }
+        })
+          
+        .state('route2', {
+            url: "/route2",
+            templateUrl: "about.html",
+            controller: 'aboutController',
+            resolve: {
+              delay: function($timeout) {
+                return $timeout(function(){}, 1000);
+              }
+            }
+
+        })
+    }).run(function($rootScope) {
+
+      $rootScope.$on('$stateChangeStart', function() {
+      	
+        $rootScope.stateLoading = true;
+      })
+      
+      $rootScope.$on('$stateChangeSuccess', function() {
+        $rootScope.stateLoading = false;
+      })
+    })
+
+	// create the controller and inject Angular's $scope
+	scotchApp.controller('mainController', function($scope) {
+		// create a message to display in our view
+		$scope.message = 'Everyone come and see how good I look!';
+	});
+
+	scotchApp.controller('aboutController', function($scope,$location) {
+		$scope.stateGo = function(path) {
+			//alert(path)
+       $location.path('route1');;
+   }
+		$scope.message = 'Look! I am an about page.';
+	});
+
+	scotchApp.controller('contactController', function($scope) {
+		$scope.message = 'Contact us! JK. This is just a demo.';
+	});
+function showTab(n)
+{
+alert(n)
+}
+</script>  
+</body>
+
+</html>

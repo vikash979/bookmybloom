@@ -1,0 +1,38 @@
+
+<div class="jumbotron text-center">
+    <h1>The Homey Page</h1>
+    <p>This page demonstrates <span class="text-danger">nested</span> views.</p>
+    
+    <a ui-sref=".list" class="btn btn-primary">List</a>
+    <a ui-sref=".paragraph" class="btn btn-danger">Paragraph</a>
+    
+</div>
+ <div id="status-buttons" class="text-center">
+              <a ui-sref-active="active" ui-sref=".profile"><span>1</span> Profile</a>
+              <a ui-sref-active="active" ui-sref=".interests"><span>2</span> Interests</a>
+              <a ui-sref-active="active" ui-sref=".payment"><span>3</span> Payment</a>
+          </div>
+<div id="form-views" ui-view>{{message}}</div>
+<div id="wizard-container" ng-controller="WizardController as vm">
+
+  <div id="wizard-step-container">
+    <ul class="nav nav-pills nav-justified">
+    <li ng-repeat="step in vm.steps" ng-class="{'active':step.step == vm.currentStep}"><a ng-click="vm.gotoStep(step.step)" href="">{{step.step}}. {{step.name}}</a></li>
+    </ul>
+  </div>
+
+  <div id="wizard-content-container">
+    <ng-include src="vm.getStepTemplate()"></ng-include>
+  </div>
+  
+  <div id="wizard-navigation-container">
+    <div class="pull-right">
+      <span class="btn-group">
+        <button ng-disabled="vm.currentStep <= 1" class="btn btn-default" name="previous" type="button" ng-click="vm.gotoStep(vm.currentStep - 1)"><i class="fa fa-arrow-left"></i> Previous step</button>
+        <button ng-disabled="vm.currentStep >= vm.steps.length" class="btn btn-primary" name="next" type="button" ng-click="vm.gotoStep(vm.currentStep + 1)">Next step <i class="fa fa-arrow-right"></i></button>
+      </span>
+      <button ng-disabled="vm.currentStep != vm.steps.length" class="btn btn-success" name="next" type="button" ng-click="vm.save()"> <i class="fa fa-floppy-o"></i> Save</button>
+    </div>
+  </div>
+
+</div>
